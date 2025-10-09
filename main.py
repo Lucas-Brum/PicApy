@@ -1,27 +1,14 @@
 import sqlite3
 
+from db import DataBase
+
 user = 'Lucas'
 email = 'lucasbrum@gmail.com'
 password = '123456'
 
-conn = sqlite3.connect('picapy.db')
+db = DataBase()
+db.create_table()
+db.insert_user(user, email, password)
+db.close()
 
-cursor = conn.cursor()
 
-cursor.execute('''
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nome TEXT NOT NULL,
-        email TEXT UNIQUE,
-        password TEXT NOT NULL
-)''')
-
-cursor.execute('''
-INSERT INTO users (nome, email, password)
-VALUES (?, ?, ?)
-''', (user, email, password))
-
-conn.commit()
-
-cursor.close()
-conn.close()
