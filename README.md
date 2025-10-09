@@ -1,2 +1,2 @@
 # PicApy
-Projeto de contrução de uma api para o desafio tecnico do picpay
+Projeto de construção de uma API para o desafio tecnico do PicPay
