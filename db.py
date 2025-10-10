@@ -26,6 +26,7 @@ class DataBase:
                     email TEXT UNIQUE,
                     password TEXT NOT NULL
             )''')
+            self.conn.commit() 
             logging.info("Database connection established.")
         except sqlite3.Error as e:
             logging.error(f"Failed to create table: {e}")
@@ -39,12 +40,31 @@ class DataBase:
                 VALUES (?, ?, ?)
                 ''', 
                 (user, email, password))
+            self.conn.commit() 
             logging.info("User inserted successfully.")
         except:
             logging.error("Failed to insert user.")
             raise
 
     
+
+
+    def show_users(self):
+        try:
+            self.cursor.execute("SELECT id, nome, email, password FROM users")
+            rows = self.cursor.fetchall()
+            self.conn.commit() 
+
+            if rows:
+                logging.info("Users found in database: picapy.db")
+                for row in rows:
+                    print(f"ID: {row[0]}, Name: {row[1]}, Email: {row[2]}, Password: {row[3]}")
+            else:
+                logging.info("No users found in database.")
+        except Exception as e:
+            logging.error(f"Failed to fetch users: {e}")
+            raise
+
     def close(self):
         try:
             self.cursor.close()
