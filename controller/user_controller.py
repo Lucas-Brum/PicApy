@@ -11,7 +11,7 @@ class UserController:
 
         if validation_response is not None:
             return ResponseHandler.error(
-                message=validation_response,
+                message=validation_response["message"],
                 status_code=400
             )
 
