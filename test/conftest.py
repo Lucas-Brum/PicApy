@@ -1,14 +1,13 @@
-# D:\Users\lucas.brum\code\PicApy\test\conftest.py
-import os, sys, pathlib, pytest
+import sys
+import pathlib
+import pytest
 
-TESTS_DIR = pathlib.Path(__file__).resolve().parent
-PROJECT_DIR = TESTS_DIR.parent  # ...\PicApy
-
-# Garante que a raiz do projeto esteja no sys.path
+PROJECT_DIR = pathlib.Path(__file__).resolve().parent.parent
 if str(PROJECT_DIR) not in sys.path:
     sys.path.insert(0, str(PROJECT_DIR))
 
-from app import app as flask_app  # agora funciona
+from app import app as flask_app
+from model.data_base import DataBase
 
 @pytest.fixture
 def app():
@@ -17,5 +16,4 @@ def app():
 
 @pytest.fixture
 def client(app):
-    with app.test_client() as c:
-        yield c
+    return app.test_client()

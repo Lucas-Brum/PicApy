@@ -72,7 +72,6 @@ class DataBase:
         cursor = self.conn.cursor()
         cursor.execute("SELECT id, user_name, email FROM users")
         rows = cursor.fetchall()
-        # Converte para lista de dicionários
         return [
             {"id": row[0], "user_name": row[1], "email": row[2]}
             for row in rows
@@ -134,10 +133,6 @@ class DataBase:
 
     
     def delete_by_id(self, user_id: int) -> bool:
-        """
-        Remove um usuário pelo ID.
-        Retorna True se o usuário existia e foi removido, False caso contrário.
-        """
         self.cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
         self.conn.commit()
         return self.cursor.rowcount > 0

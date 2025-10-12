@@ -8,7 +8,7 @@ app.register_blueprint(users_bp, url_prefix="/")
 @app.errorhandler(Exception)
 def handle_exception(e):
     return ResponseHandler.error(
-        message="Erro inesperado. Contate o suporte.",
+        message="Unexpected error. Please contact support.",
         status_code=500,
         details=str(e)
     )

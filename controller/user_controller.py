@@ -9,7 +9,7 @@ class UserController:
         validator = Validations(user_name, email, password)
         validation_response = validator.validate_user_data()
         if validation_response is not None:
-            return ResponseHandler.error(message="Campos obrigatórios ausentes.", status_code=400)
+            return ResponseHandler.error(message="Required fields are missing.", status_code=400)
 
         user = User(user_name, email, password)
         db = DataBase()
@@ -22,7 +22,7 @@ class UserController:
         if result["success"]:
             return ResponseHandler.created(
                 data=result["user"],
-                message="Usuário criado com sucesso!"
+                message="User created successfully!"
             )
         else:
             return ResponseHandler.error(
@@ -49,7 +49,7 @@ class UserController:
             db.close()
 
         if user is None:
-            return ResponseHandler.error(message="Usuário não encontrado", status_code=404)
+            return ResponseHandler.error(message="User not found", status_code=404)
 
         return ResponseHandler.success(data=user)
 
@@ -62,16 +62,16 @@ class UserController:
 
             if not result["success"]:
                 if "not found" in result["error"].lower():
-                    return ResponseHandler.error(message="Usuário não encontrado", status_code=404)
+                    return ResponseHandler.error(message="User not found", status_code=404)
                 elif "already in use" in result["error"].lower():
-                    return ResponseHandler.error(message="E-mail já em uso", status_code=409)
+                    return ResponseHandler.error(message="Email already in use", status_code=409)
                 else:
-                    return ResponseHandler.error(message="Falha ao atualizar usuário", status_code=500)
+                    return ResponseHandler.error(message="Email already in use", status_code=409)
 
-            return ResponseHandler.success(data=result["user"], message="Usuário atualizado com sucesso")
+            return ResponseHandler.success(data=result["user"], message="User updated successfully")
 
         except Exception as e:
-            return ResponseHandler.error(message="Erro interno do servidor", details=str(e), status_code=500)
+            return ResponseHandler.error(message="Internal server error", details=str(e), status_code=500)
         finally:
             if db:
                 db.close()
@@ -83,8 +83,8 @@ class UserController:
             deleted = db.delete_by_id(user_id)
 
             if not deleted:
-                return ResponseHandler.error(message=f"Usuário com id {user_id} não encontrado.", status_code=404)
+                return ResponseHandler.error(message=f"User with id {user_id} not found.", status_code=404)
 
-            return ResponseHandler.success(message="Usuário deletado com sucesso.")
+            return ResponseHandler.success(message="User deleted successfully.")
         except Exception as e:
-            return ResponseHandler.error(message=f"Erro ao deletar usuário: {str(e)}", status_code=500)
+            return ResponseHandler.error(message=f"Error deleting user: {str(e)}", status_code=500)
