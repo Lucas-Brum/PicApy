@@ -1,5 +1,7 @@
 import sqlite3
 import logging
+from pathlib import Path
+
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -8,8 +10,12 @@ logging.basicConfig(
 
 class DataBase:
     def __init__(self):
+        db_path = Path("db/picapy.db")
+
+        db_path.parent.mkdir(parents=True, exist_ok=True)
+
         try:
-            self.conn = sqlite3.connect("db/picapy.db")
+            self.conn = sqlite3.connect(str(db_path))
             self.cursor = self.conn.cursor()
             logging.info("Database connection established.")
         except sqlite3.Error as e:
@@ -33,7 +39,6 @@ class DataBase:
         except sqlite3.Error as e:
             logging.error(f"Failed to create table: {e}")
             raise
-
 
     def insert_user(self, user_name, email, password):
         try:
