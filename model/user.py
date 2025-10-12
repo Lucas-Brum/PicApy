@@ -1,4 +1,4 @@
-from model.security import Security
+from model.security.security import Security
 
 
 class User:

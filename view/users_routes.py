@@ -29,7 +29,6 @@ def get_user(user_id):
 
 @users_bp.put("/users/<int:user_id>")
 def update_user(user_id):
-    print('aaaaaaaaaaaaaaaaaaaaaaaaaaa')
     data = request.get_json(silent=True) or {}
     user_name = data.get("user_name")
     email = data.get("email")
