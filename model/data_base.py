@@ -2,16 +2,21 @@ import sqlite3
 import logging
 from pathlib import Path
 
-
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-
 class DataBase:
-    def __init__(self):
-        db_path = Path("db/picapy.db")
+    """
+    Handles SQLite database connections and user-related operations.
+    Provides methods to create tables, insert, update, delete, and fetch users.
+    """
 
+    def __init__(self):
+        """
+        Initializes the database connection and ensures the database file exists.
+        """
+        db_path = Path("db/picapy.db")
         db_path.parent.mkdir(parents=True, exist_ok=True)
 
         try:
@@ -23,6 +28,9 @@ class DataBase:
             raise
 
     def create_table(self):
+        """
+        Creates the 'users' table if it does not already exist.
+        """
         try:
             self.cursor.execute(
                 """
@@ -41,6 +49,17 @@ class DataBase:
             raise
 
     def insert_user(self, user_name, email, password):
+        """
+        Inserts a new user into the database.
+
+        Args:
+            user_name (str): The name of the user.
+            email (str): The user's email (must be unique).
+            password (str): The user's password.
+
+        Returns:
+            dict: Success status and user data or an error message.
+        """
         try:
             self.cursor.execute(
                 "INSERT INTO users (user_name, email, password) VALUES (?, ?, ?)",
@@ -67,8 +86,13 @@ class DataBase:
             logging.error(f"Database error: {e}")
             return {"success": False, "error": "Failed to save user to database."}
 
-   
     def get_all_users(self):
+        """
+        Retrieves all users from the database.
+
+        Returns:
+            list: A list of dictionaries with user details.
+        """
         cursor = self.conn.cursor()
         cursor.execute("SELECT id, user_name, email FROM users")
         rows = cursor.fetchall()
@@ -77,28 +101,36 @@ class DataBase:
             for row in rows
         ]
 
-    def close(self):
-        try:
-            self.cursor.close()
-            self.conn.close()
-            logging.info("Database connection closed.")
-        except sqlite3.Error as e:
-            logging.error(f"Error closing connection: {e}")
-    
     def get_user_by_id(self, user_id):
+        """
+        Retrieves a single user by ID.
+
+        Args:
+            user_id (int): The ID of the user.
+
+        Returns:
+            dict or None: User data if found, else None.
+        """
         cursor = self.conn.cursor()
         cursor.execute("SELECT id, user_name, email FROM users WHERE id = ?", (user_id,))
         row = cursor.fetchone()
         if row:
-            return {
-                "id": row[0],
-                "user_name": row[1],
-                "email": row[2]
-            }
+            return {"id": row[0], "user_name": row[1], "email": row[2]}
         return None
-    
 
     def update_user(self, user_id, user_name=None, email=None, password=None):
+        """
+        Updates an existing user's information.
+
+        Args:
+            user_id (int): The ID of the user to update.
+            user_name (str, optional): New name for the user.
+            email (str, optional): New email (must be unique).
+            password (str, optional): New password.
+
+        Returns:
+            dict: Success status and updated user data, or an error message.
+        """
         current = self.get_user_by_id(user_id)
         if current is None:
             return {"success": False, "error": "User not found"}
@@ -131,8 +163,27 @@ class DataBase:
         updated = self.get_user_by_id(user_id)
         return {"success": True, "user": updated}
 
-    
     def delete_by_id(self, user_id: int) -> bool:
+        """
+        Deletes a user by ID.
+
+        Args:
+            user_id (int): The ID of the user to delete.
+
+        Returns:
+            bool: True if the user existed and was deleted, False otherwise.
+        """
         self.cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
         self.conn.commit()
         return self.cursor.rowcount > 0
+
+    def close(self):
+        """
+        Closes the database connection safely.
+        """
+        try:
+            self.cursor.close()
+            self.conn.close()
+            logging.info("Database connection closed.")
+        except sqlite3.Error as e:
+            logging.error(f"Error closing connection: {e}")
