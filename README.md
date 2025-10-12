@@ -147,7 +147,7 @@ PicApy/
 │   └── users_routes.py     # Flask Endpoint Definition
 ├── app.py                  # Application entry point
 ├── requirements.txt        # Project dependencies
-└── README.md            # This file
+└── README.md               # This file
 ```
 
 ## 🤝 Contribution
