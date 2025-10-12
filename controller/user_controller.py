@@ -1,15 +1,19 @@
 from model.user import User
 from model.data_base import DataBase
 from model.utils.api_utils import ResponseHandler
-from model.utils.utils import Validations
+from model.utils.validations_utils import Validations
 
 class UserController:
     @staticmethod
     def create_user(user_name: str, email: str, password: str):
         validator = Validations(user_name, email, password)
         validation_response = validator.validate_user_data()
+
         if validation_response is not None:
-            return ResponseHandler.error(message="Required fields are missing.", status_code=400)
+            return ResponseHandler.error(
+                message=validation_response,
+                status_code=400
+            )
 
         user = User(user_name, email, password)
         db = DataBase()
