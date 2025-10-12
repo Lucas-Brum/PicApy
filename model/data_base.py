@@ -9,9 +9,8 @@ logging.basicConfig(
 class DataBase:
     def __init__(self):
         try:
-            self.conn = sqlite3.connect("picapy.db")
+            self.conn = sqlite3.connect("db/picapy.db")
             self.cursor = self.conn.cursor()
-
             logging.info("Database connection established.")
         except sqlite3.Error as e:
             logging.error(f"Database connection failed: {e}")
@@ -23,37 +22,50 @@ class DataBase:
                 """
                 CREATE TABLE IF NOT EXISTS users (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nome TEXT NOT NULL,
+                    user_name TEXT NOT NULL,         
                     email TEXT UNIQUE,
                     password TEXT NOT NULL
-            )"""
+                )
+                """
             )
             self.conn.commit()
-            logging.info("Database connection established.")
+            logging.info("Users table created or already exists.")
         except sqlite3.Error as e:
             logging.error(f"Failed to create table: {e}")
             raise
 
-    def insert_user(self, user, email, password):
+
+    def insert_user(self, user_name, email, password):
         try:
             self.cursor.execute(
-                """
-                INSERT INTO users (nome, email, password)
-                VALUES (?, ?, ?)
-                """,
-                (user, email, password),
+                "INSERT INTO users (user_name, email, password) VALUES (?, ?, ?)",
+                (user_name, email, password),
             )
             self.conn.commit()
             logging.info("User inserted successfully.")
-        except:
-            logging.error("Failed to insert user.")
-            raise
+            return {
+                "success": True,
+                "user": {
+                    "id": self.cursor.lastrowid,
+                    "user_name": user_name,
+                    "email": email,
+                },
+            }
+        except sqlite3.IntegrityError as e:
+            if "email" in str(e).lower() and "unique" in str(e).lower():
+                logging.warning(f"Email '{email}' already exists.")
+                return {"success": False, "error": "Email already registered."}
+            else:
+                logging.error(f"Integrity error: {e}")
+                return {"success": False, "error": "Failed to save user to database."}
+        except Exception as e:
+            logging.error(f"Database error: {e}")
+            return {"success": False, "error": "Failed to save user to database."}
 
     def show_users(self):
         try:
-            self.cursor.execute("SELECT id, nome, email, password FROM users")
+            self.cursor.execute("SELECT id, user_name, email, password FROM users")
             rows = self.cursor.fetchall()
-            self.conn.commit()
 
             if rows:
                 logging.info("Users found in database: picapy.db")

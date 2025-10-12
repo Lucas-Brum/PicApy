@@ -1,26 +1,9 @@
-from flask import Flask, request
-from api_utils import Validations, Response
-
+from flask import Flask
+from view.users_routes import users_bp
 
 app = Flask(__name__)
 
-@app.post("/users")
-def create_user():
-    data = request.get_json(silent=True) or {}
-
-    user = data.get("user")
-    email = data.get("email")
-    password = data.get("password")
-
-    validator = Validations(user, email, password)
-    validation_response = validator.validate_user_data()
-
-    if validation_response:
-        return validation_response
-    
-    response = Response(user, email)
-    return response.create_response()
-
+app.register_blueprint(users_bp, url_prefix="/")
 
 if __name__ == "__main__":
     app.run(debug=True)
