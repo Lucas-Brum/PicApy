@@ -1,11 +1,14 @@
 from model.user import User
-from model.data_base import DataBase
 from model.utils.api_utils import ResponseHandler
 from model.utils.validations_utils import Validations
 
 class UserController:
-    @staticmethod
-    def create_user(user_name: str, email: str, password: str):
+    def __init__(self, db):
+        self.db = db
+        print(db)
+
+    
+    def create_user(self, user_name: str, email: str, password: str):
         validator = Validations(user_name, email, password)
         validation_response = validator.validate_user_data()
 
@@ -16,12 +19,12 @@ class UserController:
             )
 
         user = User(user_name, email, password)
-        db = DataBase()
+        
         try:
-            db.create_table()
-            result = db.insert_user(user.user_name, user.email, user.password_hash)
+            self.db.create_table()
+            result = self.db.insert_user(user.user_name, user.email, user.password_hash)
         finally:
-            db.close()
+            self.db.close()
 
         if result["success"]:
             return ResponseHandler.created(
@@ -34,35 +37,31 @@ class UserController:
                 status_code=400
             )
 
-    @staticmethod
-    def get_all_users():
-        db = DataBase()
+    
+    def get_all_users(self):
         try:
-            users = db.get_all_users()
+            users = self.db.get_all_users()
         finally:
-            db.close()
+            self.db.close()
 
         return ResponseHandler.success(data=users)
 
-    @staticmethod
-    def get_user_by_id(user_id):
-        db = DataBase()
+    
+    def get_user_by_id(self, user_id):
         try:
-            user = db.get_user_by_id(user_id)
+            user = self.db.get_user_by_id(user_id)
         finally:
-            db.close()
+            self.db.close()
 
         if user is None:
             return ResponseHandler.error(message="User not found", status_code=404)
 
         return ResponseHandler.success(data=user)
 
-    @staticmethod
-    def update_user(user_id, user_name=None, email=None, password=None):
-        db = None
+    
+    def update_user(self, user_id, user_name=None, email=None, password=None):
         try:
-            db = DataBase()
-            result = db.update_user(user_id, user_name, email, password)
+            result = self.db.update_user(user_id, user_name, email, password)
 
             if not result["success"]:
                 if "not found" in result["error"].lower():
@@ -77,14 +76,13 @@ class UserController:
         except Exception as e:
             return ResponseHandler.error(message="Internal server error", details=str(e), status_code=500)
         finally:
-            if db:
-                db.close()
+            if self.db:
+                self.db.close()
 
-    @staticmethod
-    def delete_user(user_id: int):
+    
+    def delete_user(self, user_id: int):
         try:
-            db = DataBase()
-            deleted = db.delete_by_id(user_id)
+            deleted = self.db.delete_by_id(user_id)
 
             if not deleted:
                 return ResponseHandler.error(message=f"User with id {user_id} not found.", status_code=404)
