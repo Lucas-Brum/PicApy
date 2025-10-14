@@ -1,5 +1,5 @@
 import pytest
-from app import app  # seu Flask app
+from app import app
 from model.data_base import DataBase
 
 @pytest.fixture
@@ -11,9 +11,11 @@ def client():
 @pytest.fixture(autouse=True)
 def clean_db():
     db = DataBase()
+    db.create_table() 
     db.cursor.execute("DELETE FROM users")
     db.conn.commit()
     db.close()
+
 
 def test_create_user(client):
     payload = {

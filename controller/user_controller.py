@@ -21,11 +21,11 @@ class UserController:
 
         hashed_password = Security.hash_password(password)
 
-        user = User(user_name, email, hashed_password)
+        new_user = User(user_name, email, hashed_password)
         
         try:
             self.db.create_table()
-            result = self.db.insert_user(user.user_name, user.email, user.password_hash)
+            result = self.db.insert_user(new_user.user_name, new_user.email, new_user.password_hash)
         finally:
             self.db.close()
 
