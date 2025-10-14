@@ -6,13 +6,14 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
+
 class DataBase:
     """
     Handles SQLite database connections and user-related operations.
     Provides methods to create tables, insert, update, delete, and fetch users.
     """
 
-    def __init__(self)-> None:
+    def __init__(self) -> None:
         """
         Initializes the database connection and ensures the database file exists.
         """
@@ -48,7 +49,7 @@ class DataBase:
             logging.error(f"Failed to create table: {e}")
             raise
 
-    def insert_user(self, user_name:str, email:str, password:str) -> dict:
+    def insert_user(self, user_name: str, email: str, password: str) -> dict:
         """
         Inserts a new user into the database.
 
@@ -96,12 +97,9 @@ class DataBase:
         cursor = self.conn.cursor()
         cursor.execute("SELECT id, user_name, email FROM users")
         rows = cursor.fetchall()
-        return [
-            {"id": row[0], "user_name": row[1], "email": row[2]}
-            for row in rows
-        ]
+        return [{"id": row[0], "user_name": row[1], "email": row[2]} for row in rows]
 
-    def get_user_by_id(self, user_id:int) -> dict | None:
+    def get_user_by_id(self, user_id: int) -> dict | None:
         """
         Retrieves a single user by ID.
 
@@ -112,13 +110,17 @@ class DataBase:
             dict or None: User data if found, else None.
         """
         cursor = self.conn.cursor()
-        cursor.execute("SELECT id, user_name, email FROM users WHERE id = ?", (user_id,))
+        cursor.execute(
+            "SELECT id, user_name, email FROM users WHERE id = ?", (user_id,)
+        )
         row = cursor.fetchone()
         if row:
             return {"id": row[0], "user_name": row[1], "email": row[2]}
         return None
 
-    def update_user(self, user_id:int, user_name:str, email:str, password:str) -> dict:
+    def update_user(
+        self, user_id: int, user_name: str, email: str, password: str
+    ) -> dict:
         """
         Updates an existing user's information.
 
@@ -136,7 +138,9 @@ class DataBase:
             return {"success": False, "error": "User not found"}
 
         if email is not None and email != current["email"]:
-            self.cursor.execute("SELECT 1 FROM users WHERE email = ? AND id != ?", (email, user_id))
+            self.cursor.execute(
+                "SELECT 1 FROM users WHERE email = ? AND id != ?", (email, user_id)
+            )
             if self.cursor.fetchone():
                 return {"success": False, "error": "Email already in use"}
 

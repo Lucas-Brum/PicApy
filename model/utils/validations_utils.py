@@ -1,4 +1,5 @@
 import re
+from typing import List, Dict, Any
 
 
 class Validations:
@@ -7,60 +8,64 @@ class Validations:
         self.email = email
         self.password = password
 
-    def validate_have_data(self) -> dict | None:
-        if not self.user_name or not self.email or not self.password:
+    def validate_have_data(self) -> Dict[str, Any] | None:
+        """Verifica campos ausentes e retorna lista específica."""
+        missing_fields: List[str] = []
+
+        if not self.user_name:
+            missing_fields.append("user_name")
+        if not self.email:
+            missing_fields.append("email")
+        if not self.password:
+            missing_fields.append("password")
+
+        if missing_fields:
+            fields_str = ", ".join(missing_fields)
             return {
-                "erro": {
-                    "success": False,
-                    "message": "Required fields: user_name, email, password",
-                }
+                "success": False,
+                "message": f"Missing required fields: {fields_str}",
             }
         return None
 
-    def validate_user_name(self) -> dict | None:
-        if not re.match(r"^[A-Za-z0-9]{3,30}$", self.user_name):
+    def validate_user_name(self) -> Dict[str, Any] | None:
+        if self.user_name and not re.match(r"^[A-Za-z0-9]{3,30}$", self.user_name):
             return {
-                "erro": {
-                    "success": False,
-                    "message": "Username must be alphanumeric and 3-30 characters long",
-                }
+                "success": False,
+                "message": "Username must be alphanumeric and 3-30 characters long",
             }
         return None
 
-    def validate_email(self) -> dict | None:
+    def validate_email(self) -> Dict[str, Any] | None:
         email_regex = r"^[\w\.-]+@[\w\.-]+\.\w+$"
-        if not re.match(email_regex, self.email):
-            return {"erro": {"success": False, "message": "Invalid email format"}}
+        if self.email and not re.match(email_regex, self.email):
+            return {"success": False, "message": "Invalid email format"}
         return None
 
-    def validate_password(self) -> dict | None:
+    def validate_password(self) -> Dict[str, Any] | None:
         password_regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{}|;':\",.<>\/?]).{8,}$"
-        if not re.match(password_regex, self.password):
+        if self.password and not re.match(password_regex, self.password):
             return {
-                "erro": {
-                    "success": False,
-                    "message": "Password must be at least 8 characters long, "
-                    "include uppercase, lowercase, number and special character",
-                }
+                "success": False,
+                "message": "Password must be at least 8 characters long, "
+                "include uppercase, lowercase, number and special character",
             }
         return None
 
-    def validate_user_data(self) -> dict | None:
-        # Validação em ordem (short-circuit)
-        have_data = self.validate_have_data()
-        if have_data:
-            return have_data["erro"]
+    def validate_user_data(self) -> Dict[str, Any] | None:
+        missing_error = self.validate_have_data()
+        if missing_error:
+            return missing_error
 
-        user_name_error = self.validate_user_name()
-        if user_name_error:
-            return user_name_error["erro"]
+        username_error = self.validate_user_name()
+        if username_error:
+            return username_error
 
         email_error = self.validate_email()
         if email_error:
-            return email_error["erro"]
+            return email_error
 
         password_error = self.validate_password()
         if password_error:
-            return password_error["erro"]
+            return password_error
 
-        return None
+        return None  # All validate

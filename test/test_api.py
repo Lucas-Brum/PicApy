@@ -153,12 +153,72 @@ def test_error_email_create_user(client: FlaskClient) -> None:
 def test_error_password_create_user(client: FlaskClient) -> None:
     payload = {
         "user_name": "LucasBrum",
-        "email": "lucas@pipcpay.com",  # ✅ Corrigido: email válido!
-        "password": "p@ssword1234"     # ❌ Senha inválida (sem maiúscula)
+        "email": "lucas@pipcpay.com",  
+        "password": "p@ssword1234"     
     }
     res = client.post("/users", json=payload)
     assert res.status_code == 400
     data = res.get_json()
     assert data["success"] is False
-    # Ajuste conforme sua mensagem real:
     assert "password" in data["message"].lower()
+
+def test_error_missing_all_fields(client: FlaskClient) -> None:
+    payload = {}
+    res = client.post("/users", json=payload)
+    assert res.status_code == 400
+    data = res.get_json()
+    assert data["success"] is False
+    assert data["message"] == "Missing required fields: user_name, email, password"
+
+def test_error_missing_only_user_name(client: FlaskClient) -> None:
+    payload = {
+        "email": "lucas@pipcpay.com",
+        "password": "P@ssword1234"
+    }
+    res = client.post("/users", json=payload)
+    assert res.status_code == 400
+    data = res.get_json()
+    assert data["success"] is False
+    assert data["message"] == "Missing required fields: user_name"
+
+def test_error_missing_only_email(client: FlaskClient) -> None:
+    payload = {
+        "user_name": "Lucas",
+        "password": "P@ssword1234"
+    }
+    res = client.post("/users", json=payload)
+    assert res.status_code == 400
+    data = res.get_json()
+    assert data["success"] is False
+    assert data["message"] == "Missing required fields: email"
+
+def test_error_missing_only_password(client: FlaskClient) -> None:
+    payload = {
+        "user_name": "Lucas",
+        "email": "lucas@pipcpay.com"
+    }
+    res = client.post("/users", json=payload)
+    assert res.status_code == 400
+    data = res.get_json()
+    assert data["success"] is False
+    assert data["message"] == "Missing required fields: password"
+
+def test_error_missing_user_name_and_email(client: FlaskClient) -> None:
+    payload = {
+        "password": "P@ssword1234"
+    }
+    res = client.post("/users", json=payload)
+    assert res.status_code == 400
+    data = res.get_json()
+    assert data["success"] is False
+    assert data["message"] == "Missing required fields: user_name, email"
+
+def test_error_missing_email_and_password(client: FlaskClient) -> None:
+    payload = {
+        "user_name": "Lucas"
+    }
+    res = client.post("/users", json=payload)
+    assert res.status_code == 400
+    data = res.get_json()
+    assert data["success"] is False
+    assert data["message"] == "Missing required fields: email, password"
