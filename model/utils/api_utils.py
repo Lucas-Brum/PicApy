@@ -1,4 +1,6 @@
-from flask import jsonify, make_response
+from flask import jsonify, make_response, Response
+from typing import Any, Optional
+
 
 class ResponseHandler:
     """
@@ -7,7 +9,11 @@ class ResponseHandler:
     """
 
     @staticmethod
-    def success(data=None, message="Operation completed successfully", status_code=200):
+    def success(
+        data: Optional[Any] = None,
+        message: str = "Operation completed successfully",
+        status_code: int = 200,
+    ) -> Response:
         """
         Returns a standard success response.
 
@@ -19,16 +25,15 @@ class ResponseHandler:
         Returns:
             Flask Response: JSON response with success status and optional data.
         """
-        body = {
-            "success": True,
-            "message": message
-        }
+        body = {"success": True, "message": message}
         if data is not None:
             body["data"] = data
         return make_response(jsonify(body), status_code)
 
     @staticmethod
-    def created(data=None, message="Resource created successfully"):
+    def created(
+        data: Optional[Any] = None, message: str = "Resource created successfully"
+    ) -> Response:
         """
         Returns a standard response for resource creation.
 
@@ -42,7 +47,12 @@ class ResponseHandler:
         return ResponseHandler.success(data=data, message=message, status_code=201)
 
     @staticmethod
-    def error(message="Internal server error", status_code=400, error_code=None, details=None):
+    def error(
+        message: str = "Internal server error",
+        status_code: int = 400,
+        error_code: Optional[str] = None,
+        details: Optional[str] = None,
+    ) -> Response:
         """
         Returns a standard error response.
 
@@ -55,12 +65,9 @@ class ResponseHandler:
         Returns:
             Flask Response: JSON response with error information.
         """
-        body = {
-            "success": False,
-            "message": message
-        }
-        if error_code:
+        body = {"success": False, "message": message}
+        if error_code is not None:
             body["error_code"] = error_code
-        if details:
+        if details is not None:
             body["details"] = details
         return make_response(jsonify(body), status_code)

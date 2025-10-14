@@ -1,5 +1,5 @@
 class User:
-    def __init__(self, user_name: str, email: str, password_hash: str):
+    def __init__(self, user_name: str, email: str, password_hash: str) -> None:
         self._user_name = user_name
         self._email = email
         self._password_hash = password_hash
@@ -15,4 +15,3 @@ class User:
     @property
     def password_hash(self) -> str:
         return self._password_hash
-
