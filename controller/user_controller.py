@@ -1,8 +1,9 @@
 from typing import Any
 from model.user import User
+from model.user_model import UserSchema
 from model.security.security import Security
-from model.utils.api_utils import ResponseHandler
-from model.utils.validations_utils import Validations
+from model.api.api_utils import ResponseHandler
+from model.validations import Validations
 
 
 class UserController:
@@ -10,17 +11,21 @@ class UserController:
         self.db = db
 
     def create_user(self, user_name: str, email: str, password: str) -> Any:
-        validator = Validations(user_name, email, password)
-        validation_response = validator.validate_user_data()
+        try:
+            user_data = UserSchema(user_name=user_name, email=email, password=password)
+        except Exception as e:
+            return ResponseHandler.error(message=str(e), status_code=400)
 
-        if validation_response is not None:
+        validator = Validations(user_name, password)
+        validation_response = validator.validate_user_data()
+        if validation_response:
             return ResponseHandler.error(
                 message=validation_response["message"], status_code=400
             )
 
-        hashed_password = Security.hash_password(password)
+        hashed_password = Security.hash_password(user_data.password)
 
-        new_user = User(user_name, email, hashed_password)
+        new_user = User(user_data.user_name, user_data.email, hashed_password)
 
         try:
             self.db.create_table()

@@ -1,4 +1,4 @@
-from model.utils.api_utils import ResponseHandler
+from model.api.api_utils import ResponseHandler
 from flask.typing import ResponseReturnValue
 from view.users_routes import users_bp
 from flask import Flask
