@@ -1,4 +1,5 @@
 from model.user import User
+from model.security.security import Security
 from model.utils.api_utils import ResponseHandler
 from model.utils.validations_utils import Validations
 
@@ -18,7 +19,9 @@ class UserController:
                 status_code=400
             )
 
-        user = User(user_name, email, password)
+        hashed_password = Security.hash_password(password)
+
+        user = User(user_name, email, hashed_password)
         
         try:
             self.db.create_table()

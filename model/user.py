@@ -1,11 +1,8 @@
-from model.security.security import Security
-
-
 class User:
     def __init__(self, user_name: str, email: str, password: str):
         self._user_name = user_name
         self._email = email
-        self._password_hash = Security.hash_password(password)
+        self._password_hash = password
 
     @property
     def user_name(self):
