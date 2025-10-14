@@ -20,13 +20,41 @@ The project is structured following the **Model-View-Controller (MVC)** architec
 
 The project was developed and tested using the following Python version and the libraries listed in `requirements.txt`:
 
-| Technology | Version | Purpose |
-| :--- | :--- | :--- |
-| **Python** | **3.11.9** | Main programming language. |
-| **Flask** | 3.1.2 | Web framework for the API. |
-| **pytest** | 8.4.2 | Testing framework. |
-| **pytest-flask** | 1.3.0 | Extension for testing Flask applications. |
-| **Werkzeug** | 3.1.3 | Utility library for WSGI. |
+| Technology            | Version | Purpose                                                  |
+| :-------------------- | :------ | :------------------------------------------------------- |
+| **Python**            | 3.11.9  | Main programming language.                               |
+| **Flask**             | 3.1.2   | Web framework for building the API.                      |
+| **Werkzeug**          | 3.1.3   | WSGI utility library used by Flask.                      |
+| **Pydantic**          | 2.12.2  | Data validation and settings management.                 |
+| **email-validator**   | 2.3.0   | Validates email addresses.                               |
+| **bcrypt**            | 5.0.0   | Password hashing.                                        |
+| **pytest**            | 8.4.2   | Testing framework.                                       |
+| **pytest-flask**      | 1.3.0   | Flask extension for testing.                             |
+| **black**             | 25.9.0  | Code formatter for Python.                               |
+| **click**             | 8.3.0   | Command line interface creation library (used by Flask). |
+| **dnspython**         | 2.8.0   | Required dependency for some email validations.          |
+| **blinker**           | 1.9.0   | Used for Flask signals/events.                           |
+| **typing-extensions** | 4.15.0  | Backports of typing features.                            |
+| **typing-inspection** | 0.4.2   | Helper for inspecting types in Python.                   |
+| **packaging**         | 25.0    | Library for version and dependency parsing.              |
+| Technology            | Version | Purpose                                                  |
+| :-------------------- | :------ | :------------------------------------------------------- |
+| **Python**            | 3.11.9  | Main programming language.                               |
+| **Flask**             | 3.1.2   | Web framework for building the API.                      |
+| **Werkzeug**          | 3.1.3   | WSGI utility library used by Flask.                      |
+| **Pydantic**          | 2.12.2  | Data validation and settings management.                 |
+| **email-validator**   | 2.3.0   | Validates email addresses.                               |
+| **bcrypt**            | 5.0.0   | Password hashing.                                        |
+| **pytest**            | 8.4.2   | Testing framework.                                       |
+| **pytest-flask**      | 1.3.0   | Flask extension for testing.                             |
+| **black**             | 25.9.0  | Code formatter for Python.                               |
+| **click**             | 8.3.0   | Command line interface creation library (used by Flask). |
+| **dnspython**         | 2.8.0   | Required dependency for some email validations.          |
+| **blinker**           | 1.9.0   | Used for Flask signals/events.                           |
+| **typing-extensions** | 4.15.0  | Backports of typing features.                            |
+| **typing-inspection** | 0.4.2   | Helper for inspecting types in Python.                   |
+| **packaging**         | 25.0    | Library for version and dependency parsing.              |
+
 
 ## ⚙️ Setup and Installation
 
@@ -85,6 +113,12 @@ Make sure the virtual environment is activated and run `pytest` in the project r
 pytest
 ```
 
+If you what se more information about the tests use:
+
+```bash
+pytest -v
+```
+
 ### 2. Database Note
 
 The tests use a temporary and isolated SQLite database for each execution, ensuring that the tests are independent and do not interfere with the main application data.
@@ -130,24 +164,32 @@ The project follows the MVC pattern, with the following directory organization:
 
 ```
 PicApy/
-├── controller/             # Business Logic (Controllers)
-│   └── user_controller.py  # Manages User CRUD operations
-├── model/                  # Data Logic (Models)
-│   ├── data_base.py        # Manages connection and operations with SQLite
-│   ├── security/           # Security Module
-│   │   └── security.py     # Password Hashing and Verification Functions
-│   ├── user.py             # User Entity Class (Object-Oriented)
-│   └── utils/              # Utilities
-│       ├── api_utils.py    # API Response Standardization
-│       └── validations_utils.py # Data Validation Logic
-├── test/                   # Unit Tests
-│   ├── conftest.py         # Pytest Configurations ('client' fixture)
-│   └── test_api.py         # API Endpoint Tests
-├── view/                   # Routes (Views)
-│   └── users_routes.py     # Flask Endpoint Definition
-├── app.py                  # Application entry point
-├── requirements.txt        # Project dependencies
-└── README.md               # This file
+├── controller/                 # Business Logic (Controllers)
+│   └── user_controller.py      # Manages User CRUD operations
+├── model/                      # Data Logic (Models)
+│   ├── api/                    # API Helpers
+│   │   └── api_utils.py        # API Response Standardization
+│   ├── security/               # Security Module
+│   │   └── security.py         # Password Hashing and Verification
+│   ├── utils/                  # Utilities
+│   │   └── validations.py      # Data Validation Logic
+│   ├── data_base.py            # Manages SQLite connection and operations
+│   ├── user_model.py           # Pydantic User Schema
+│   └── user.py                 # User Entity Class (Object-Oriented)
+├── test/                       # Unit Tests
+│   ├── conftest.py             # Pytest Configurations ('client' fixture)
+│   └── test_api.py             # API Endpoint Tests
+├── view/                       # Routes (Views)
+│   └── users_routes.py         # Flask Endpoint Definition
+├── db/                         # Database Folder
+│   └── picapy.db               # SQLite Database
+├── img/                        # Images
+│   └── logo.jpg
+├── app.py                      # Application Entry Point
+├── factory.py                  # App Factory (if using app factory pattern)
+├── requirements.txt            # Project Dependencies
+└── README.md                   # This file
+
 ```
 
 ## 🤝 Contribution
