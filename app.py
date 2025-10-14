@@ -6,7 +6,7 @@ app = Flask(__name__)
 app.register_blueprint(users_bp, url_prefix="/")
 
 @app.errorhandler(Exception)
-def handle_exception(e):
+def handle_exception(e: Exception) -> any:
     return ResponseHandler.error(
         message="Unexpected error. Please contact support.",
         status_code=500,

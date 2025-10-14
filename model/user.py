@@ -1,20 +1,18 @@
 class User:
-    def __init__(self, user_name: str, email: str, password: str):
+    def __init__(self, user_name: str, email: str, password_hash: str):
         self._user_name = user_name
         self._email = email
-        self._password_hash = password
+        self._password_hash = password_hash
 
     @property
-    def user_name(self):
+    def user_name(self) -> str:
         return self._user_name
 
     @property
-    def email(self):
+    def email(self) -> str:
         return self._email
 
     @property
-    def password_hash(self):
+    def password_hash(self) -> str:
         return self._password_hash
 
-    def check_password(self, password: str) -> bool:
-        return Security.verify_password(password, self._password_hash)

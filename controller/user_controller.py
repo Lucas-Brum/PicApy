@@ -1,4 +1,5 @@
 from model.user import User
+from typeguard import typechecked
 from model.security.security import Security
 from model.utils.api_utils import ResponseHandler
 from model.utils.validations_utils import Validations
@@ -6,10 +7,9 @@ from model.utils.validations_utils import Validations
 class UserController:
     def __init__(self, db):
         self.db = db
-        print(db)
 
-    
-    def create_user(self, user_name: str, email: str, password: str):
+    @typechecked
+    def create_user(self, user_name: str, email: str, password: str) -> any:
         validator = Validations(user_name, email, password)
         validation_response = validator.validate_user_data()
 
@@ -40,8 +40,8 @@ class UserController:
                 status_code=400
             )
 
-    
-    def get_all_users(self):
+    @typechecked
+    def get_all_users(self) -> any:
         try:
             users = self.db.get_all_users()
         finally:
@@ -49,8 +49,8 @@ class UserController:
 
         return ResponseHandler.success(data=users)
 
-    
-    def get_user_by_id(self, user_id):
+    @typechecked
+    def get_user_by_id(self, user_id) -> any:
         try:
             user = self.db.get_user_by_id(user_id)
         finally:
@@ -61,8 +61,8 @@ class UserController:
 
         return ResponseHandler.success(data=user)
 
-    
-    def update_user(self, user_id, user_name=None, email=None, password=None):
+    @typechecked
+    def update_user(self, user_id, user_name=None, email=None, password=None) -> any:
         try:
             result = self.db.update_user(user_id, user_name, email, password)
 
@@ -82,8 +82,8 @@ class UserController:
             if self.db:
                 self.db.close()
 
-    
-    def delete_user(self, user_id: int):
+    @typechecked
+    def delete_user(self, user_id: int) -> any:
         try:
             deleted = self.db.delete_by_id(user_id)
 

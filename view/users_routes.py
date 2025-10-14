@@ -9,7 +9,7 @@ users_bp = Blueprint("users", __name__)
 
 # Route to create a new user
 @users_bp.post("/users")
-def create_user():
+def create_user() -> any:
     # Get data sent in the request body
     data = request.get_json(silent=True) or {}
     user_name = data.get("user_name")
@@ -24,7 +24,7 @@ def create_user():
 
 # Route to return all users
 @users_bp.get("/users")
-def get_all_users():
+def get_all_users() -> any:
     user_controller = Factory.user_controller()
 
     # Call the controller to fetch all users
@@ -33,7 +33,7 @@ def get_all_users():
 
 # Route to return a specific user by ID
 @users_bp.get("/users/<int:user_id>")
-def get_user(user_id):
+def get_user(user_id: int)-> any:
     user_controller = Factory.user_controller()
 
     # Call the controller to fetch the user by ID
@@ -42,7 +42,7 @@ def get_user(user_id):
 
 # Route to update an existing user by ID
 @users_bp.put("/users/<int:user_id>")
-def update_user(user_id):
+def update_user(user_id:int)-> any:
     # Get data sent in the request body
     data = request.get_json(silent=True) or {}
     user_name = data.get("user_name")
@@ -57,7 +57,7 @@ def update_user(user_id):
 
 # Route to delete a user by ID
 @users_bp.delete("/users/<int:user_id>")
-def delete_user(user_id):
+def delete_user(user_id:int)-> any:
     user_controller = Factory.user_controller()
 
     # Call the controller to delete the user

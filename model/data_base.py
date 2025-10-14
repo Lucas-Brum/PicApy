@@ -12,7 +12,7 @@ class DataBase:
     Provides methods to create tables, insert, update, delete, and fetch users.
     """
 
-    def __init__(self):
+    def __init__(self)-> None:
         """
         Initializes the database connection and ensures the database file exists.
         """
@@ -27,7 +27,7 @@ class DataBase:
             logging.error(f"Database connection failed: {e}")
             raise
 
-    def create_table(self):
+    def create_table(self) -> None:
         """
         Creates the 'users' table if it does not already exist.
         """
@@ -48,7 +48,7 @@ class DataBase:
             logging.error(f"Failed to create table: {e}")
             raise
 
-    def insert_user(self, user_name, email, password):
+    def insert_user(self, user_name:str, email:str, password:str) -> dict:
         """
         Inserts a new user into the database.
 
@@ -86,7 +86,7 @@ class DataBase:
             logging.error(f"Database error: {e}")
             return {"success": False, "error": "Failed to save user to database."}
 
-    def get_all_users(self):
+    def get_all_users(self) -> list[dict]:
         """
         Retrieves all users from the database.
 
@@ -101,7 +101,7 @@ class DataBase:
             for row in rows
         ]
 
-    def get_user_by_id(self, user_id):
+    def get_user_by_id(self, user_id:int) -> dict | None:
         """
         Retrieves a single user by ID.
 
@@ -118,7 +118,7 @@ class DataBase:
             return {"id": row[0], "user_name": row[1], "email": row[2]}
         return None
 
-    def update_user(self, user_id, user_name=None, email=None, password=None):
+    def update_user(self, user_id:int, user_name:str, email:str, password:str) -> dict:
         """
         Updates an existing user's information.
 
@@ -177,7 +177,7 @@ class DataBase:
         self.conn.commit()
         return self.cursor.rowcount > 0
 
-    def close(self):
+    def close(self) -> None:
         """
         Closes the database connection safely.
         """
