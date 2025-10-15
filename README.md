@@ -39,21 +39,7 @@ The project was developed and tested using the following Python version and the 
 | **packaging**         | 25.0    | Library for version and dependency parsing.              |
 | Technology            | Version | Purpose                                                  |
 | :-------------------- | :------ | :------------------------------------------------------- |
-| **Python**            | 3.11.9  | Main programming language.                               |
-| **Flask**             | 3.1.2   | Web framework for building the API.                      |
-| **Werkzeug**          | 3.1.3   | WSGI utility library used by Flask.                      |
-| **Pydantic**          | 2.12.2  | Data validation and settings management.                 |
-| **email-validator**   | 2.3.0   | Validates email addresses.                               |
-| **bcrypt**            | 5.0.0   | Password hashing.                                        |
-| **pytest**            | 8.4.2   | Testing framework.                                       |
-| **pytest-flask**      | 1.3.0   | Flask extension for testing.                             |
-| **black**             | 25.9.0  | Code formatter for Python.                               |
-| **click**             | 8.3.0   | Command line interface creation library (used by Flask). |
-| **dnspython**         | 2.8.0   | Required dependency for some email validations.          |
-| **blinker**           | 1.9.0   | Used for Flask signals/events.                           |
-| **typing-extensions** | 4.15.0  | Backports of typing features.                            |
-| **typing-inspection** | 0.4.2   | Helper for inspecting types in Python.                   |
-| **packaging**         | 25.0    | Library for version and dependency parsing.              |
+
 
 
 ## ⚙️ Setup and Installation
