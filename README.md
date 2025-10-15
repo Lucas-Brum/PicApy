@@ -37,7 +37,7 @@ The project was developed and tested using the following Python version and the 
 | **typing-extensions** | 4.15.0  | Backports of typing features.                            |
 | **typing-inspection** | 0.4.2   | Helper for inspecting types in Python.                   |
 | **packaging**         | 25.0    | Library for version and dependency parsing.              |
-| Technology            | Version | Purpose                                                  |
+
 
 
 
