@@ -38,7 +38,7 @@ The project was developed and tested using the following Python version and the 
 | **typing-inspection** | 0.4.2   | Helper for inspecting types in Python.                   |
 | **packaging**         | 25.0    | Library for version and dependency parsing.              |
 | Technology            | Version | Purpose                                                  |
-| :-------------------- | :------ | :------------------------------------------------------- |
+
 
 
 
